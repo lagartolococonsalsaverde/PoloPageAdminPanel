@@ -1,2 +1,2 @@
-// export const BASE_URL = 'https://api-shop.pawidols.com/'
-// export const BASE_URL = 'http://localhost:5001/'
+export const BASE_URL = 'https://api.polopage.net/'
+// export const BASE_URL = 'http://localhost:3000/'

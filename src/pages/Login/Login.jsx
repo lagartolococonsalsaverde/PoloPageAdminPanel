@@ -25,7 +25,7 @@ const Login = () => {
                 { headers: { "Content-Type": "application/json" } }
             );
 
-            if (response.status === 201) {
+            if (response.status === 200) {
                 Cookies.set("token", response.data.data.token);
                 Cookies.set("refreshToken", response.data.data.refreshToken);
 

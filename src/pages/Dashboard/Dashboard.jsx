@@ -1,12 +1,12 @@
 import React from "react";
-import FormsTable from "./FormsTable";
+import FormsTable from "../Player/Players";
 import LoggedinLayout from "../../components/LoggedinLayout";
 
 const Dashboard = () => {
 
     return (
         <LoggedinLayout>
-            <FormsTable />
+            {/* <FormsTable /> */}
         </LoggedinLayout>
     );
 };

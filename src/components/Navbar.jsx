@@ -20,7 +20,7 @@ const Navbar = () => {
             <div className="container mx-auto px-6 py-4 flex justify-between items-center">
                 {/* Logo */}
                 <Link to="/" className="text-white text-2xl font-bold tracking-wide">
-                    Guff<span className="text-yellow-300">Calendar</span>
+                    Polo<span className="text-yellow-300">Page</span>
                 </Link>
 
                 {/* Mobile Menu Button */}
@@ -42,9 +42,23 @@ const Navbar = () => {
                     >
                         Dashboard
                     </Link>
+                    
+                    <Link
+                        to="/players"
+                        className="block md:inline-block text-white hover:text-yellow-300 px-6 py-3 md:py-2 transition duration-300"
+                    >
+                        Players
+                    </Link>
+                    
+                    <Link
+                        to="/qna"
+                        className="block md:inline-block text-white hover:text-yellow-300 px-6 py-3 md:py-2 transition duration-300"
+                    >
+                        Q&A
+                    </Link>
 
                     {/* Template Dropdown */}
-                    <div
+                    {/* <div
                         className="relative flex justify-center group"
                         onMouseEnter={() => setIsTemplateOpen(true)}
                         onMouseLeave={() => setIsTemplateOpen(false)}
@@ -80,7 +94,7 @@ const Navbar = () => {
                                 </Link>
                             </div>
                         )}
-                    </div>
+                    </div> */}
                     {/* User Dropdown */}
                     <div
                         className="relative flex justify-center group"

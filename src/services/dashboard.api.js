@@ -8,37 +8,57 @@ export function isResponseStatusFailed(statusCode) {
 
 export const axiosInstance = createHttpService(BASE_URL);
 
-export async function fetchForms() {
-  const response = await axiosInstance.get("/dashboard/forms");
-  return response.data;
-}
-
-export async function fetchFormResponses(formId, status, page, perPage) {
-
+export async function fetchPlayers(page, perPage) {
   const params = {
     page: page.toString(),
     perPage: perPage.toString(),
   };
 
-  if (status) {
-    params.status = status
-  }
+  const queryParams = new URLSearchParams(params)
+
+  const response = await axiosInstance.get(`players?${queryParams?.toString()}`);
+  return response.data;
+}
+
+export async function fetchPlayerById(playerId) {
+  const response = await axiosInstance.get(`players/${playerId}`);
+  return response.data;
+}
+
+export async function createPlayer(data) {
+  const response = await axiosInstance.post(`players`, data);
+  return response.data;
+}
+
+export async function updatePlayer(playerId, data) {
+  const response = await axiosInstance.put(`players/${playerId}`, data);
+  return response.data;
+}
+
+export async function deletePlayer(playerId) {
+  const response = await axiosInstance.deleteMethod(`players/${playerId}`);
+  return response.data;
+}
+
+export async function fetchQnA(page, perPage) {
+  const params = {
+    page: page.toString(),
+    perPage: perPage.toString(),
+  };
 
   const queryParams = new URLSearchParams(params)
 
-  const response = await axiosInstance.get(`/dashboard/forms/${formId}/responses?${queryParams.toString()}`);
+  const response = await axiosInstance.get(`api/questions?${queryParams.toString()}`);
   return response.data;
 }
+
 
 
 export async function fetchFormResponse(responseId) {
   const response = await axiosInstance.get(`/dashboard/forms/responses/${responseId}`);
   return response.data;
 }
-export async function fetchFormResponseImage(url) {
-  const response = await axiosInstance.post(`dashboard/forms/responses/fetch-image`, { url });
-  return response.data;
-}
+
 
 export async function confirmResponse(responseId) {
   const response = await axiosInstance.patch(`/dashboard/forms/responses/${responseId}/confirm`);

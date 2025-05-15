@@ -32,4 +32,4 @@ jobs:
       - name: Copy build files to deploy directory
         run: |
           sudo rm -rf /var/www/admin-panel/*
-          sudo cp -r build/* /var/www/admin-panel/
+          sudo cp -r dist/* /var/www/admin-panel/

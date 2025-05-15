@@ -26,10 +26,10 @@ jobs:
 
       - name: Create deploy directory if it doesn't exist
         run: |
-          sudo mkdir -p /var/www/react-app
-          sudo chown -R $USER:$USER /var/www/react-app
+          sudo mkdir -p /var/www/admin-panel
+          sudo chown -R $USER:$USER /var/www/admin-panel
 
       - name: Copy build files to deploy directory
         run: |
-          sudo rm -rf /var/www/react-app/*
-          sudo cp -r build/* /var/www/react-app/
+          sudo rm -rf /var/www/admin-panel/*
+          sudo cp -r build/* /var/www/admin-panel/

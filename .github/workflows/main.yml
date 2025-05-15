@@ -24,7 +24,12 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Copy build to deployment directory
+      - name: Create deploy directory if it doesn't exist
         run: |
-          rm -rf /var/www/admin-panel/*
-          cp -r dist/* /var/www/admin-panel/
+          sudo mkdir -p /var/www/react-app
+          sudo chown -R $USER:$USER /var/www/react-app
+
+      - name: Copy build files to deploy directory
+        run: |
+          sudo rm -rf /var/www/react-app/*
+          sudo cp -r build/* /var/www/react-app/

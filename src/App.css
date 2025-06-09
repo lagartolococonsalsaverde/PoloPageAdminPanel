@@ -1,8 +1,14 @@
 @import "tailwindcss";
 
 body {
-  background: linear-gradient(to right, #1579fc, #58a6ff);
+  /* background: linear-gradient(to right, #1579fc, #58a6ff); */
+  background: linear-gradient(to right, #EEDFDE, #EEDFDE);
 }
+
+/* #ADEBB3 Mint Green */
+/* #EEDFDE Peach */
+/* #007A33 Dark Green */
+
 
 #root {
   width: 100%;

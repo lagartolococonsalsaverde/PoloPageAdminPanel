@@ -70,12 +70,12 @@ const Players = () => {
     <LoggedinLayout>
       <div className="container mx-auto p-4">
 
-        <h2 className="text-2xl font-semibold text-white mb-6">Players</h2>
+        <h2 className="text-2xl font-semibold text-green-900 mb-6">Players</h2>
 
-        <Link to={'/create-player'} className="block w-fit mx-auto bg-blue-50 hover:bg-blue-100 rounded-md text-blue-900 px-4 py-2 mb-4">
+        <Link to={'/create-player'} className="block w-fit mx-auto bg-green-50 hover:bg-green-100 rounded-md text-green-900 px-4 py-2 mb-4">
           Create Player</Link>
 
-        {loading && <p className="text-white">Loading players...</p>}
+        {loading && <p className="text-green-900">Loading players...</p>}
         {error && <p className="text-red-500">{error}</p>}
 
         {!loading && !error && (

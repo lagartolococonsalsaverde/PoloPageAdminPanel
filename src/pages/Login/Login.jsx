@@ -39,7 +39,7 @@ const Login = () => {
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
+        <div className="flex justify-center items-center min-h-screen bg-[#EEDFDE] px-4">
             <form
                 onSubmit={handleLogin}
                 className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md"
@@ -58,7 +58,7 @@ const Login = () => {
                         placeholder="Enter your email/username"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full px-4 py-2 bg-gray-100 text-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        className="w-full px-4 py-2 bg-gray-100 text-gray-600 rounded-lg focus:ring-2 focus:ring-green-700 focus:outline-none"
                         required
                     />
                 </div>
@@ -74,7 +74,7 @@ const Login = () => {
                             placeholder="Enter your password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-4 py-2 bg-gray-100 text-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none pr-10"
+                            className="w-full px-4 py-2 bg-gray-100 text-gray-600 rounded-lg focus:ring-2 focus:ring-green-700 focus:outline-none pr-10"
                             required
                         />
                         <button
@@ -93,7 +93,7 @@ const Login = () => {
                 {/* Login Button */}
                 <button
                     type="submit"
-                    className="w-full bg-blue-500 text-white cursor-pointer my-6 py-2 rounded-lg font-semibold hover:bg-blue-600 transition-all flex justify-center items-center disabled:opacity-50"
+                    className="w-full bg-green-700 text-white cursor-pointer my-6 py-2 rounded-lg font-semibold hover:bg-green-800 transition-all flex justify-center items-center disabled:opacity-50"
                     disabled={loading}
                 >
                     {loading ? "Logging in..." : "Login"}

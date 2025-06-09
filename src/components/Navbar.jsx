@@ -15,8 +15,9 @@ const Navbar = () => {
         navigate("/login");
     };
 
+    // from-[#1579fc] to-blue-400
     return (
-        <nav className="bg-gradient-to-r from-[#1579fc] to-blue-400 shadow-md">
+        <nav className="sticky top-0 z-50 bg-gradient-to-r from-[#007A33] to-[#007A33] shadow-md">
             <div className="container mx-auto px-6 py-4 flex justify-between items-center">
                 {/* Logo */}
                 <Link to="/" className="text-white text-2xl font-bold tracking-wide">
@@ -33,7 +34,7 @@ const Navbar = () => {
 
                 {/* Navigation Links */}
                 <div
-                    className={`md:flex md:items-center md:space-x-6 absolute md:static bg-blue-600 md:bg-transparent top-16 left-0 w-full md:w-auto transition-all duration-300 ease-in-out ${isOpen ? "block" : "hidden"
+                    className={`md:flex md:items-center md:space-x-6 font-medium absolute md:static bg-green-600 md:bg-transparent top-16 left-0 w-full md:w-auto transition-all duration-300 ease-in-out ${isOpen ? "block" : "hidden"
                         }`}
                 >
                     <Link
@@ -108,12 +109,12 @@ const Navbar = () => {
                             <div className="absolute top-8 right-0 bg-white shadow-lg rounded-lg w-44 mt-2 overflow-hidden z-10">
                                 <Link
                                     to="/user-settings"
-                                    className="block px-4 py-2 text-[15px] text-gray-700 hover:bg-blue-100 hover:font-medium transition duration-200"
+                                    className="block px-4 py-2 text-[15px] text-gray-700 hover:bg-green-100 hover:font-medium transition duration-200"
                                 >
                                     Settings
                                 </Link>
                                 <button
-                                    className="w-full block px-4 py-2 text-[15px] text-gray-700 hover:bg-blue-100 hover:font-medium transition duration-200"
+                                    className="w-full block px-4 py-2 text-[15px] text-gray-700 hover:bg-green-100 hover:font-medium transition duration-200"
                                     onClick={handleLogout}
                                 >
                                     Logout

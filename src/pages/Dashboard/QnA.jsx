@@ -69,10 +69,10 @@ const QnA = () => {
   return (
     <LoggedinLayout>
       <div className="max-w-6xl mx-auto p-6">
-        <h2 className="text-3xl font-bold text-white mb-10 text-center">❓ Q&A Overview</h2>
+        <h2 className="text-3xl font-bold text-green-900 mb-10 text-center">❓ Q&A Overview</h2>
 
         {loading ? (
-          <p className="text-center text-white text-lg">Loading Q&As...</p>
+          <p className="text-center text-green-900 text-lg">Loading Q&As...</p>
         ) : (
           <div className="grid gap-6">
             {questionNAnswers?.length > 0 ? (

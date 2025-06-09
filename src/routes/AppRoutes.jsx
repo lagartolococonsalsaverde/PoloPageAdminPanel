@@ -14,6 +14,9 @@ import Players from '../pages/Player/Players';
 import QnA from '../pages/Dashboard/QnA';
 import CreatePlayer from '../pages/Player/CreatePlayer';
 import UpdatePlayer from '../pages/Player/UpdatePlayer';
+import Horses from '../pages/Horses/Horses';
+import Veterinarians from '../pages/Veterinarians/Veterinarians';
+import Farriers from '../pages/Farriers/Farriers';
 
 const isUserAuthenticated = () => {
     return !!Cookies.get('token');
@@ -81,6 +84,30 @@ const AppRoutes = () => {
                     element={
                         <ProtectedRoute>
                             <QnA />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/farriers"
+                    element={
+                        <ProtectedRoute>
+                            <Farriers />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/horses"
+                    element={
+                        <ProtectedRoute>
+                            <Horses />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/veterinarians"
+                    element={
+                        <ProtectedRoute>
+                            <Veterinarians />
                         </ProtectedRoute>
                     }
                 />

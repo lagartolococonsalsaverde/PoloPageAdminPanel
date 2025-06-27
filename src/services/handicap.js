@@ -9,10 +9,8 @@ export async function deleteQuestion(questionId) {
   return response.data;
 }
 
-export async function deletehandicaps(id) {
-  const response = await axiosInstance.deleteMethod(
-    `api/questions/${questionId.toString()}/handicaps/${id}`
-  );
+export async function deleteHandicaps(id) {
+  const response = await axiosInstance.deleteMethod(`handicaps/${id}`);
   return response.data;
 }
 
@@ -27,5 +25,20 @@ export async function fetchHandicaps(page, perPage) {
   const response = await axiosInstance.get(
     `handicaps?${queryParams.toString()}`
   );
+  return response.data;
+}
+
+export async function fetchHandicapById(handicapId) {
+  const response = await axiosInstance.get(`handicaps/${handicapId}`);
+  return response.data;
+}
+
+export async function updateHandicap(handicapId, data) {
+  const response = await axiosInstance.put(`handicaps/${handicapId}`, data);
+  return response.data;
+} 
+
+export async function createHandicap(data) {
+  const response = await axiosInstance.post(`handicaps`, data);
   return response.data;
 }

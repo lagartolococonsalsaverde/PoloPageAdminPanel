@@ -27,12 +27,12 @@ export async function fetchPlayerById(playerId) {
 
 export async function createPlayer(data) {
   const response = await axiosInstance.post(`players`, data);
-  return response.data;
+  return response;
 }
 
 export async function updatePlayer(playerId, data) {
   const response = await axiosInstance.put(`players/${playerId}`, data);
-  return response.data;
+  return response;
 }
 
 export async function deletePlayer(playerId) {

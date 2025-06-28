@@ -67,7 +67,7 @@ export const createHttpService = (baseURL = 'https://localhost:5000/') => {
         },
         async (error) => {
             const config = error.config;
-            const errorMessage = error?.response?.data?.message || 'Something went wrong. Please try again later.';
+            const errorMessage = error?.response?.data?.error || 'Something went wrong. Please try again later.';
             const status = error?.response?.status;
             if (status === 401 && errorMessage === 'EXPIRED_TOKEN' && !config._retry) {
                 config._retry = true;
@@ -193,7 +193,7 @@ export const createHttpService = (baseURL = 'https://localhost:5000/') => {
 
     const handleErrorResponse = (error) => {
         if (axios.isAxiosError(error)) {
-            const errorMessageFromAPI = error.response?.data?.message;
+            const errorMessageFromAPI = error.response?.data?.error || error.response?.data?.message;
             const status = error.response?.status ?? 500;
             return {
                 success: false,

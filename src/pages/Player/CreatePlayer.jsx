@@ -46,6 +46,23 @@ const CreatePlayer = () => {
     const handleSubmit = async () => {
         if (!validateForm()) return;
 
+        // Check for duplicate types
+        const typeCounts = {};
+        for (const h of handicaps) {
+            if (h.type) {
+                typeCounts[h.type] = (typeCounts[h.type] || 0) + 1;
+            }
+        }
+
+        // Find if any type appears more than 2 times
+        const duplicateType = Object.entries(typeCounts).find(([_, count]) => count > 1);
+
+        if (duplicateType) {
+            // Show error however you want — toast, state error, alert, etc.
+            toast.error(`The handicap type appears more than once.`);
+            return; // Stop further update
+        }
+
         setLoading(true);
         setMessage("");
         try {
@@ -72,9 +89,38 @@ const CreatePlayer = () => {
         }
     };
 
+    // const handleHandicapChange = (index, field, value) => {
+    //     const updated = [...handicaps];
+    //     updated[index][field] = field === "number" ? Number(value) : value;
+    //     setHandicaps(updated);
+    // };
+
     const handleHandicapChange = (index, field, value) => {
         const updated = [...handicaps];
         updated[index][field] = field === "number" ? Number(value) : value;
+
+        // if (field === "number") {
+        //     setHandicaps(updated)
+        //     return;
+        // }
+
+        // // Check for duplicate types
+        // const typeCounts = {};
+        // for (const h of updated) {
+        //     if (h.type) {
+        //         typeCounts[h.type] = (typeCounts[h.type] || 0) + 1;
+        //     }
+        // }
+
+        // // Find if any type appears more than 2 times
+        // const duplicateType = Object.entries(typeCounts).find(([_, count]) => count > 1);
+
+        // if (duplicateType) {
+        //     // Show error however you want — toast, state error, alert, etc.
+        //     toast.error(`Duplicate handicaps not allowed.`);
+        //     return; // Stop further update
+        // }
+
         setHandicaps(updated);
     };
 
@@ -206,13 +252,13 @@ const CreatePlayer = () => {
                                     className="border border-gray-300 p-3 rounded-xl w-full focus:ring-blue-400"
                                 />
                                 {/* {index > 0 && ( */}
-                                    <button
-                                        type="button"
-                                        onClick={() => removeHandicapField(index)}
-                                        className="text-red-500 text-xl"
-                                    >
-                                        ×
-                                    </button>
+                                <button
+                                    type="button"
+                                    onClick={() => removeHandicapField(index)}
+                                    className="text-red-500 text-xl"
+                                >
+                                    ×
+                                </button>
                                 {/* )} */}
                             </div>
                         ))}

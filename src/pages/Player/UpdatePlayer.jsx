@@ -20,8 +20,8 @@ const UpdatePlayer = () => {
                     birthDate: data.birthDate?.slice(0, 10) || "",
                     handicap: data.handicap ?? 0,
                     gender: data.gender || "male",
-                    rank: data.rank || "junior",
-                    category: data.category || "pro",
+                    // rank: data.rank || "junior",
+                    // category: data.category || "pro",
                     previousHandicap: data.previousHandicap ?? "",
                     whatsapp: data.whatsapp ?? "",
                 });
@@ -131,34 +131,6 @@ const UpdatePlayer = () => {
                             <option value="" disabled>Select Gender</option>
                             <option value="male">Male</option>
                             <option value="female">Female</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Rank</label>
-                        <select
-                            name="rank"
-                            className="border border-gray-300 p-3 rounded-xl w-full bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            value={formData.rank}
-                            onChange={handleChange}
-                        >
-                            <option value="" disabled>Select Rank</option>
-                            <option value="junior">Junior</option>
-                            <option value="senior">Senior</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                        <select
-                            name="category"
-                            className="border border-gray-300 p-3 rounded-xl w-full bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            value={formData.category}
-                            onChange={handleChange}
-                        >
-                            <option value="" disabled>Select Category</option>
-                            <option value="pro">Pro</option>
-                            <option value="amateur">Amateur</option>
                         </select>
                     </div>
 

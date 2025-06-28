@@ -23,8 +23,8 @@ const UpdatePlayer = () => {
                     birthDate: data.birthDate?.slice(0, 10) || "",
                     handicap: data.handicap ?? 0,
                     gender: data.gender || "",
-                    rank: data.rank || "junior",
-                    category: data.category || "pro",
+                    // rank: data.rank || "junior",
+                    // category: data.category || "pro",
                     previousHandicap: data.previousHandicap ?? "",
                     whatsapp: data.whatsapp ?? "",
                 });
@@ -188,7 +188,7 @@ const UpdatePlayer = () => {
                     </div>
 
                     {/* Rank */}
-                    <div>
+                    {/* <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Rank</label>
                         <select
                             name="rank"
@@ -199,10 +199,10 @@ const UpdatePlayer = () => {
                             <option value="junior">Junior</option>
                             <option value="senior">Senior</option>
                         </select>
-                    </div>
+                    </div> */}
 
                     {/* Category */}
-                    <div>
+                    {/* <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
                         <select
                             name="category"
@@ -213,7 +213,7 @@ const UpdatePlayer = () => {
                             <option value="pro">Pro</option>
                             <option value="amateur">Amateur</option>
                         </select>
-                    </div>
+                    </div> */}
 
                     {/* Previous Handicap */}
                     <div>

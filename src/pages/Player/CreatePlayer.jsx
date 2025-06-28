@@ -163,7 +163,7 @@ const CreatePlayer = () => {
             </select>
           </div>
 
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Rank
             </label>
@@ -179,9 +179,9 @@ const CreatePlayer = () => {
               <option value="junior">Junior</option>
               <option value="senior">Senior</option>
             </select>
-          </div>
+          </div> */}
 
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Category
             </label>
@@ -197,7 +197,7 @@ const CreatePlayer = () => {
               <option value="pro">Pro</option>
               <option value="amateur">Amateur</option>
             </select>
-          </div>
+          </div> */}
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">

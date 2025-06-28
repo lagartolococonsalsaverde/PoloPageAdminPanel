@@ -7,7 +7,6 @@ import { Link, useNavigate } from "react-router-dom";
 const PER_PAGE = 10;
 
 const Players = () => {
-
   const navigate = useNavigate();
 
   const [players, setPlayers] = useState([]);
@@ -69,11 +68,14 @@ const Players = () => {
   return (
     <LoggedinLayout>
       <div className="container mx-auto p-4">
-
         <h2 className="text-2xl font-semibold text-white mb-6">Players</h2>
 
-        <Link to={'/create-player'} className="block w-fit mx-auto bg-blue-50 hover:bg-blue-100 rounded-md text-blue-900 px-4 py-2 mb-4">
-          Create Player</Link>
+        <Link
+          to={"/create-player"}
+          className="block w-fit mx-auto bg-blue-50 hover:bg-blue-100 rounded-md text-blue-900 px-4 py-2 mb-4"
+        >
+          Create Player
+        </Link>
 
         {loading && <p className="text-white">Loading players...</p>}
         {error && <p className="text-red-500">{error}</p>}
@@ -84,33 +86,73 @@ const Players = () => {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-100">
                   <tr>
-                    <th className="px-6 py-3 text-xs text-center font-bold text-gray-700 uppercase">Name</th>
-                    <th className="px-6 py-3 text-xs text-center font-bold text-gray-700 uppercase">Gender</th>
-                    <th className="px-6 py-3 text-xs text-center font-bold text-gray-700 uppercase">Age</th>
-                    <th className="px-6 py-3 text-xs text-center font-bold text-gray-700 uppercase">Handicap</th>
-                    <th className="px-6 py-3 text-xs text-center font-bold text-gray-700 uppercase">Rank</th>
-                    <th className="px-6 py-3 text-xs text-center font-bold text-gray-700 uppercase">Category</th>
-                    <th className="px-6 py-3 text-xs text-center font-bold text-gray-700 uppercase">Birth Date</th>
-                    <th className="px-6 py-3 text-xs text-center font-bold text-gray-700 uppercase">Actions</th>
+                    <th className="px-6 py-3 text-xs text-center font-bold text-gray-700 uppercase">
+                      Name
+                    </th>
+                    <th className="px-6 py-3 text-xs text-center font-bold text-gray-700 uppercase">
+                      Gender
+                    </th>
+                    <th className="px-6 py-3 text-xs text-center font-bold text-gray-700 uppercase">
+                      Age
+                    </th>
+                    <th className="px-6 py-3 text-xs text-center font-bold text-gray-700 uppercase">
+                      Handicap
+                    </th>
+                    {/* <th className="px-6 py-3 text-xs text-center font-bold text-gray-700 uppercase">
+                      Rank
+                    </th>
+                    <th className="px-6 py-3 text-xs text-center font-bold text-gray-700 uppercase">
+                      Category
+                    </th> */}
+                    <th className="px-6 py-3 text-xs text-center font-bold text-gray-700 uppercase">
+                      Birth Date
+                    </th>
+                    <th className="px-6 py-3 text-xs text-center font-bold text-gray-700 uppercase">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {players.map((player) => (
-                    <tr key={player._id} className="hover:bg-gray-50 transition" onClick={() => navigate(`/update-player/${player._id}`)}>
-                      <td className="px-6 py-4 text-sm text-gray-900">{player.name || "--"}</td>
-                      <td className="px-6 py-4 text-sm text-gray-700 capitalize">{player.gender || "--"}</td>
-                      <td className="px-6 py-4 text-sm text-gray-700">{player.age || "--"}</td>
-                      <td className="px-6 py-4 text-sm text-gray-700">{player.handicap ?? "N/A"}</td>
-                      <td className="px-6 py-4 text-sm text-gray-700 capitalize">{player.rank || "--"}</td>
-                      <td className="px-6 py-4 text-sm text-gray-700 capitalize">{player.category || "--"}</td>
+                    <tr
+                      key={player._id}
+                      className="hover:bg-gray-50 transition"
+                      onClick={() => navigate(`/update-player/${player._id}`)}
+                    >
+                      <td className="px-6 py-4 text-sm text-gray-900">
+                        {player.name || "--"}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-700 capitalize">
+                        {player.gender || "--"}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-700">
+                        {player.age || "--"}
+                      </td>
+                      {/* <td className="px-6 py-4 text-sm text-gray-700">{player.handicap ?? "N/A"}</td>
+                       */}
+                      <td className="px-4 py-3 border-t border-gray-100">
+                        {player.handicaps && player.handicaps.length > 0
+                          ? player.handicaps.map((h, idx) => (
+                              <div key={idx}>
+                                {h.type?.type ?? "Unknown"}: {h.number}
+                              </div>
+                            ))
+                          : "N/A"}
+                      </td>
+                      {/* <td className="px-6 py-4 text-sm text-gray-700 capitalize">
+                        {player.rank || "--"}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-700 capitalize">
+                        {player.category || "--"}
+                      </td> */}
                       <td className="px-6 py-4 text-sm text-gray-700">
                         {new Date(player.birthDate).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4 text-sm text-center z-10">
                         <button
                           onClick={(event) => {
-                            event.stopPropagation()
-                            handleDeleteClick(player._id)
+                            event.stopPropagation();
+                            handleDeleteClick(player._id);
                           }}
                           className="text-red-600 hover:text-red-800 font-medium"
                         >
@@ -130,7 +172,9 @@ const Players = () => {
               onPageChange={handlePageClick}
               pageCount={pageCount}
               forcePage={currentPage}
-              containerClassName={"flex space-x-2 bg-white p-3 justify-center rounded-lg shadow-md mt-6"}
+              containerClassName={
+                "flex space-x-2 bg-white p-3 justify-center rounded-lg shadow-md mt-6"
+              }
               pageClassName={"px-3 py-2 bg-gray-100 rounded-md cursor-pointer"}
               pageLinkClassName={"text-gray-700"}
               previousClassName={"px-4 py-2 bg-blue-500 text-white rounded-md"}
@@ -145,7 +189,9 @@ const Players = () => {
           <div className="fixed inset-0 bg-[#00000055] flex items-center justify-center z-50">
             <div className="bg-white p-6 rounded-xl shadow-md w-96 text-center">
               <h3 className="text-lg font-semibold mb-4">Confirm Delete</h3>
-              <p className="text-gray-700 mb-6">Are you sure you want to delete this player?</p>
+              <p className="text-gray-700 mb-6">
+                Are you sure you want to delete this player?
+              </p>
               <div className="flex justify-center gap-3">
                 <button
                   onClick={() => setShowConfirmModal(false)}

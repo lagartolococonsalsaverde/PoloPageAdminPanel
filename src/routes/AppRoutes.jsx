@@ -17,6 +17,7 @@ import UpdatePlayer from "../pages/Player/UpdatePlayer";
 import Handicaps from "../pages/Handicap/Handicaps";
 import CreateHandicap from "../pages/Handicap/CreateHandicap";
 import UpdateHandicap from "../pages/Handicap/UpdateHandicaps";
+import Whatsapp from "../pages/Whatsapp/Whatsapp";
 
 const isUserAuthenticated = () => {
   return !!Cookies.get("token");
@@ -112,6 +113,14 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <TemplateSettings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/whatsapp"
+          element={
+            <ProtectedRoute>
+              <Whatsapp />
             </ProtectedRoute>
           }
         />

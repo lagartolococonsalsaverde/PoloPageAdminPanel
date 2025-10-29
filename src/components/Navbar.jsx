@@ -33,9 +33,8 @@ const Navbar = () => {
 
         {/* Navigation Links */}
         <div
-          className={`md:flex md:items-center md:space-x-6 absolute md:static bg-blue-600 md:bg-transparent top-16 left-0 w-full md:w-auto transition-all duration-300 ease-in-out ${
-            isOpen ? "block" : "hidden"
-          }`}
+          className={`md:flex md:items-center md:space-x-6 absolute md:static bg-blue-600 md:bg-transparent top-16 left-0 w-full md:w-auto transition-all duration-300 ease-in-out ${isOpen ? "block" : "hidden"
+            }`}
         >
           <Link
             to="/dashboard"
@@ -64,6 +63,14 @@ const Navbar = () => {
           >
             Handicap
           </Link>
+
+          <Link
+            to="/whatsapp"
+            className="block md:inline-block text-white hover:text-yellow-300 px-6 py-3 md:py-2 transition duration-300"
+          >
+            Whatsapp
+          </Link>
+
 
           {/* Template Dropdown */}
           {/* <div

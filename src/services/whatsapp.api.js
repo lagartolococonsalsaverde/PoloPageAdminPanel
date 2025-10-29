@@ -10,10 +10,7 @@ export const fetchReplies = async (page = 1, limit = 10) => {
   return data;
 };
 
-export const sendMessage = async (numbers, bodyText) => {
-  const { data } = await axiosInstance.post(`/whatsapp/send`, {
-    numbers,
-    bodyText, 
-  });
+export const sendMessage = async (payload) => {
+  const { data } = await axiosInstance.post(`/whatsapp/send`, payload);
   return data;
 };

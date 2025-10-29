@@ -5,31 +5,27 @@ import { fetchReplies, sendMessage } from "../../services/whatsapp.api";
 
 const PER_PAGE = 10;
 
-const Whatsapp = () => {
+const WhatsApp = () => {
   const [replies, setReplies] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [total, setTotal] = useState(0);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
-  const [showSendModal, setShowSendModal] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const [sending, setSending] = useState(false);
   const [message, setMessage] = useState("");
-  const [numbers, setNumbers] = useState("");
+  const [to, setTo] = useState("");
 
   const getReplies = async () => {
     setLoading(true);
     try {
-      const response = await fetchReplies(currentPage + 1, PER_PAGE);
-      if (response?.data) {
-        setReplies(response.data);
-        setTotal(response.total);
-      } else {
-        setError("Failed to fetch replies");
+      const res = await fetchReplies(page + 1, PER_PAGE);
+      if (res?.data) {
+        setReplies(res.data);
+        setTotalPages(res.totalPages || 1);
       }
     } catch (err) {
-      setError("Error fetching replies");
-      console.error(err);
+      console.error("Error fetching replies:", err);
     } finally {
       setLoading(false);
     }
@@ -37,155 +33,176 @@ const Whatsapp = () => {
 
   useEffect(() => {
     getReplies();
-  }, [currentPage]);
+  }, [page]);
 
-  const handlePageClick = ({ selected }) => setCurrentPage(selected);
+const handleSend = async (e) => {
+  e.preventDefault();
+  setSending(true);
+  try {
+    // Backend expects numbers[], flowName, and bodyText
+    const payload = {
+      numbers: [to],              // array of one or more numbers
+      flowName: "flow_test",      // or make this dynamic via input later
+      bodyText: message || "Default Body",
+    };
 
-  const handleSendMessage = async () => {
-    const numArray = numbers
-      .split(",")
-      .map((n) => n.trim())
-      .filter(Boolean);
+    await sendMessage(payload);
+    alert("Message sent successfully!");
+    setModalOpen(false);
+    setMessage("");
+    setTo("");
+    getReplies();
+  } catch (err) {
+    console.error("❌ Send Error:", err);
+    alert("Failed to send message");
+  } finally {
+    setSending(false);
+  }
+};
 
-    if (!numArray.length || !message) {
-      alert("Please enter numbers and message text");
-      return;
+  const handlePageClick = ({ selected }) => setPage(selected);
+
+  const parseMessage = (reply) => {
+    if (reply.type === "text") return reply.raw?.text?.body || reply.content;
+    if (reply.type === "interactive") {
+      const nfm = reply.raw?.interactive?.nfm_reply;
+      if (nfm) {
+        try {
+          const parsed = JSON.parse(nfm.response_json || "{}");
+          return (
+            <>
+              <p className="font-semibold text-blue-800">{nfm.body || "Flow Reply"}</p>
+              <div className="text-gray-700 text-sm mt-1 space-y-0.5">
+                {Object.entries(parsed).map(([key, val]) => (
+                  <p key={key}>
+                    <span className="font-medium">{key}</span>: {val}
+                  </p>
+                ))}
+              </div>
+            </>
+          );
+        } catch {
+          return nfm.body || reply.content;
+        }
+      }
     }
-
-    setSending(true);
-    try {
-      await sendMessage(numArray, message);
-      setShowSendModal(false);
-      setNumbers("");
-      setMessage("");
-      alert("Messages sent successfully!");
-    } catch (err) {
-      console.error("Send failed:", err);
-      alert("Failed to send messages");
-    } finally {
-      setSending(false);
-    }
+    return "--";
   };
 
-  const pageCount = Math.ceil(total / PER_PAGE);
+  const formatDate = (timestamp) => {
+    const ms = Number(timestamp) * 1000;
+    if (isNaN(ms)) return "--";
+    return new Date(ms).toLocaleString("en-US", { timeZone: "Asia/Beirut" });
+  };
 
   return (
     <LoggedinLayout>
-      <div className="container mx-auto p-4">
-        <h2 className="text-2xl font-semibold text-white mb-6">
-          WhatsApp Replies
-        </h2>
+      <div className="min-h-screen bg-gradient-to-br from-indigo-500 to-blue-600 p-8 text-white">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-3xl font-semibold text-center mb-8">WhatsApp Replies</h2>
 
-        <button
-          onClick={() => setShowSendModal(true)}
-          className="block w-fit mx-auto bg-green-100 hover:bg-green-200 rounded-md text-green-900 px-4 py-2 mb-4"
-        >
-          Send Message
-        </button>
+          <div className="flex justify-center mb-8">
+            <button
+              onClick={() => setModalOpen(true)}
+              className="bg-green-200 text-green-900 font-medium px-6 py-2 rounded-lg shadow-md hover:bg-green-300 transition"
+            >
+              Send Message
+            </button>
+          </div>
 
-        {loading && <p className="text-white">Loading replies...</p>}
-        {error && <p className="text-red-500">{error}</p>}
-
-        {!loading && !error && (
-          <>
-            <div className="overflow-x-auto bg-white shadow-lg rounded-lg">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-100">
-                  <tr>
-                    <th className="px-6 py-3 text-xs text-center font-bold text-gray-700 uppercase">
-                      From
-                    </th>
-                    <th className="px-6 py-3 text-xs text-center font-bold text-gray-700 uppercase">
-                      Message
-                    </th>
-                    <th className="px-6 py-3 text-xs text-center font-bold text-gray-700 uppercase">
-                      Timestamp
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {replies.map((reply) => (
-                    <tr
-                      key={reply._id}
-                      className="hover:bg-gray-50 transition"
-                    >
-                      <td className="px-6 py-4 text-sm text-gray-900 text-center">
-                        {reply.from || "--"}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-700 text-center">
-                        {reply.text || "--"}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-700 text-center">
-                        {new Date(reply.timestamp).toLocaleString()}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          {loading ? (
+            <p className="text-center text-white">Loading replies...</p>
+          ) : (
+            <div className="space-y-4">
+              {replies.map((reply) => (
+                <div
+                  key={reply._id}
+                  className="bg-white text-gray-900 rounded-xl shadow-md p-5 border border-gray-100 hover:shadow-lg transition duration-200"
+                >
+                  <div className="flex justify-between items-center mb-2">
+                    <p className="font-semibold text-blue-700">
+                      From: {reply.from || "--"}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      {formatDate(reply.timestamp)}
+                    </p>
+                  </div>
+                  <div className="border-t border-gray-200 pt-3 text-gray-800">
+                    {parseMessage(reply)}
+                  </div>
+                </div>
+              ))}
             </div>
+          )}
 
-            <ReactPaginate
-              breakLabel="..."
-              nextLabel="Next >"
-              previousLabel="< Prev"
-              onPageChange={handlePageClick}
-              pageCount={pageCount}
-              forcePage={currentPage}
-              containerClassName={
-                "flex space-x-2 bg-white p-3 justify-center rounded-lg shadow-md mt-6"
-              }
-              pageClassName={"px-3 py-2 bg-gray-100 rounded-md cursor-pointer"}
-              pageLinkClassName={"text-gray-700"}
-              previousClassName={"px-4 py-2 bg-blue-500 text-white rounded-md"}
-              nextClassName={"px-4 py-2 bg-blue-500 text-white rounded-md"}
-              activeClassName={"!bg-blue-500 text-white"}
-              activeLinkClassName="text-white"
-            />
-          </>
-        )}
+          {!loading && (
+            <div className="flex justify-center mt-8">
+              <ReactPaginate
+                breakLabel="..."
+                nextLabel="Next ›"
+                previousLabel="‹ Prev"
+                onPageChange={handlePageClick}
+                pageCount={totalPages}
+                forcePage={page}
+                containerClassName="flex items-center space-x-2 bg-white rounded-lg shadow-md px-4 py-2"
+                pageClassName="px-3 py-1 text-blue-700 cursor-pointer rounded-md hover:bg-blue-100"
+                activeClassName="bg-blue-600 text-white"
+                previousClassName="text-blue-700 px-3 py-1 rounded-md hover:bg-blue-100"
+                nextClassName="text-blue-700 px-3 py-1 rounded-md hover:bg-blue-100"
+              />
+            </div>
+          )}
+        </div>
+      </div>
 
-        {showSendModal && (
-          <div className="fixed inset-0 bg-[#00000055] flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-xl shadow-md w-96 text-center">
-              <h3 className="text-lg font-semibold mb-4">Send Message</h3>
+      {/* Send Message Modal */}
+      {modalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+          <div className="bg-white text-gray-900 rounded-xl shadow-lg w-full max-w-md p-6 relative">
+            <h3 className="text-xl font-semibold mb-4">Send WhatsApp Message</h3>
 
-              <textarea
-                placeholder="Enter comma-separated phone numbers (e.g. 923365746899,92300112233)"
-                className="w-full border p-2 mb-3 rounded-md"
-                rows={2}
-                value={numbers}
-                onChange={(e) => setNumbers(e.target.value)}
+            <form onSubmit={handleSend}>
+              <label className="block text-sm font-medium mb-1">To (phone number)</label>
+              <input
+                type="text"
+                placeholder="e.g. 923001234567"
+                value={to}
+                onChange={(e) => setTo(e.target.value)}
+                required
+                className="w-full border border-gray-300 rounded-md p-2 mb-3 focus:ring-2 focus:ring-blue-500"
               />
 
+              <label className="block text-sm font-medium mb-1">Recipient Name</label>
               <textarea
-                placeholder="Enter your message"
-                className="w-full border p-2 mb-3 rounded-md"
-                rows={3}
+                placeholder="Type the recipient's name here..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
+                required
+                className="w-full border border-gray-300 rounded-md p-2 mb-3 focus:ring-2 focus:ring-blue-500"
               />
 
-              <div className="flex justify-center gap-3">
+              <div className="flex justify-end mt-4 space-x-3">
                 <button
-                  onClick={() => setShowSendModal(false)}
-                  className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
+                  type="button"
+                  onClick={() => setModalOpen(false)}
+                  className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300"
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={handleSendMessage}
-                  className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                  type="submit"
                   disabled={sending}
+                  className="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                 >
                   {sending ? "Sending..." : "Send"}
                 </button>
               </div>
-            </div>
+            </form>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </LoggedinLayout>
   );
 };
 
-export default Whatsapp;
+export default WhatsApp;

@@ -5,7 +5,7 @@ import { fetchReplies, sendMessage } from "../../services/whatsapp.api";
 
 const PER_PAGE = 10;
 
-const WhatsappMessages = () => {
+const Whatsapp = () => {
   const [replies, setReplies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -188,4 +188,4 @@ const WhatsappMessages = () => {
   );
 };
 
-export default WhatsappMessages;
+export default Whatsapp;

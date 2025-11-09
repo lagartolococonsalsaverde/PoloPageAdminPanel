@@ -206,7 +206,7 @@ const WhatsApp = () => {
                 options={[
                   { value: "horas_trabajadas", label: "Horas Trabajadas" },
                   { value: "daily_livestock_report", label: "Daily Live Stock Report" },
-                  { value: "daily_reproduction_report", label: "HealDaily Reporoduction Report" },
+                  { value: "daily_reproduction_report", label: "Daily Reproduction Report" },
                 ]}
                 value={flow}
                 onChange={(option) => setFlow(option)}

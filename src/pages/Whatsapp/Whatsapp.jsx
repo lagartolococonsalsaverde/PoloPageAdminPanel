@@ -1,21 +1,25 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
+import Select from "react-select";
 import LoggedinLayout from "../../components/LoggedinLayout";
 import { fetchReplies, sendMessage } from "../../services/whatsapp.api";
+import { fetchContacts } from "../../services/contacts";
 
 const PER_PAGE = 10;
 
 const WhatsApp = () => {
   const [replies, setReplies] = useState([]);
+  const [flow, setFlow] = useState(null);
+  const [contacts, setContacts] = useState([]);
+  const [selectedContacts, setSelectedContacts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-
   const [modalOpen, setModalOpen] = useState(false);
   const [sending, setSending] = useState(false);
   const [message, setMessage] = useState("");
-  const [to, setTo] = useState("");
 
+  // Fetch WhatsApp replies (pagination)
   const getReplies = async () => {
     setLoading(true);
     try {
@@ -31,34 +35,56 @@ const WhatsApp = () => {
     }
   };
 
+  // Fetch contact list for dropdown
+  const getContacts = async () => {
+    try {
+      const { data: list } = await fetchContacts();
+      const formatted = list.map((c) => ({
+        value: c.number,
+        label: `${c.name} (${c.number})`,
+      }));
+      setContacts(formatted);
+    } catch (err) {
+      console.error("Error fetching contacts:", err);
+    }
+  };
+
   useEffect(() => {
     getReplies();
   }, [page]);
 
-const handleSend = async (e) => {
-  e.preventDefault();
-  setSending(true);
-  try {
-    // Backend expects numbers[], flowName, and bodyText
-    const payload = {
-      numbers: [to],              // array of one or more numbers
-      flowName: "flow_test",      // or make this dynamic via input later
-      bodyText: message || "Default Body",
-    };
+  useEffect(() => {
+    if (modalOpen) getContacts();
+  }, [modalOpen]);
 
-    await sendMessage(payload);
-    alert("Message sent successfully!");
-    setModalOpen(false);
-    setMessage("");
-    setTo("");
-    getReplies();
-  } catch (err) {
-    console.error("❌ Send Error:", err);
-    alert("Failed to send message");
-  } finally {
-    setSending(false);
-  }
-};
+  // Send WhatsApp message
+  const handleSend = async (e) => {
+    e.preventDefault();
+    if (!selectedContacts.length) {
+      alert("Please select at least one contact.");
+      return;
+    }
+
+    setSending(true);
+    try {
+      const payload = {
+        numbers: selectedContacts.map((c) => c.value),
+        flowName: flow?.value || "flow_test",  // dynamic flow selection
+      };
+
+      await sendMessage(payload);
+      alert("Message sent successfully!");
+      setModalOpen(false);
+      setMessage("");
+      setSelectedContacts([]);
+      getReplies();
+    } catch (err) {
+      console.error("❌ Send Error:", err);
+      alert("Failed to send message");
+    } finally {
+      setSending(false);
+    }
+  };
 
   const handlePageClick = ({ selected }) => setPage(selected);
 
@@ -156,29 +182,36 @@ const handleSend = async (e) => {
       </div>
 
       {/* Send Message Modal */}
+      {/* Send Message Modal */}
       {modalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
           <div className="bg-white text-gray-900 rounded-xl shadow-lg w-full max-w-md p-6 relative">
             <h3 className="text-xl font-semibold mb-4">Send WhatsApp Message</h3>
 
             <form onSubmit={handleSend}>
-              <label className="block text-sm font-medium mb-1">To (phone number)</label>
-              <input
-                type="text"
-                placeholder="e.g. 923001234567"
-                value={to}
-                onChange={(e) => setTo(e.target.value)}
-                required
-                className="w-full border border-gray-300 rounded-md p-2 mb-3 focus:ring-2 focus:ring-blue-500"
+              {/* Contacts */}
+              <label className="block text-sm font-medium mb-1">Select Contacts</label>
+              <Select
+                isMulti
+                options={contacts}
+                value={selectedContacts}
+                onChange={setSelectedContacts}
+                placeholder="Select contacts..."
+                className="mb-3"
               />
 
-              <label className="block text-sm font-medium mb-1">Recipient Name</label>
-              <textarea
-                placeholder="Type the recipient's name here..."
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                required
-                className="w-full border border-gray-300 rounded-md p-2 mb-3 focus:ring-2 focus:ring-blue-500"
+              {/* Flow Dropdown */}
+              <label className="block text-sm font-medium mb-1">Select Flow</label>
+              <Select
+                options={[
+                  { value: "tractor", label: "Tractor" },
+                  { value: "reproduction", label: "Reproduction" },
+                  { value: "health", label: "Health" },
+                ]}
+                value={flow}
+                onChange={(option) => setFlow(option)}
+                placeholder="Select a flow..."
+                className="mb-3"
               />
 
               <div className="flex justify-end mt-4 space-x-3">
@@ -201,6 +234,7 @@ const handleSend = async (e) => {
           </div>
         </div>
       )}
+
     </LoggedinLayout>
   );
 };

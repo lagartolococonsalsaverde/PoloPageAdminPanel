@@ -205,8 +205,8 @@ const WhatsApp = () => {
               <Select
                 options={[
                   { value: "horas_trabajadas", label: "Horas Trabajadas" },
-                  { value: "horas_trabajadas", label: "Reproduction" },
-                  { value: "horas_trabajadas", label: "Health" },
+                  { value: "daily_livestock_report", label: "Daily Live Stock Report" },
+                  { value: "daily_reproduction_report", label: "HealDaily Reporoduction Report" },
                 ]}
                 value={flow}
                 onChange={(option) => setFlow(option)}

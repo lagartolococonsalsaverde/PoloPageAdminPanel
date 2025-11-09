@@ -204,9 +204,9 @@ const WhatsApp = () => {
               <label className="block text-sm font-medium mb-1">Select Flow</label>
               <Select
                 options={[
-                  { value: "tractor", label: "Tractor" },
-                  { value: "reproduction", label: "Reproduction" },
-                  { value: "health", label: "Health" },
+                  { value: "horas_trabajadas", label: "Horas Trabajadas" },
+                  { value: "horas_trabajadas", label: "Reproduction" },
+                  { value: "horas_trabajadas", label: "Health" },
                 ]}
                 value={flow}
                 onChange={(option) => setFlow(option)}

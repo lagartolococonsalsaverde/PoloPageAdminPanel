@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import LoggedinLayout from "../../components/LoggedinLayout";
 import { toast } from "react-toastify";
-import { fetchContactsById, updateContacts } from "../../services/contacts";
+import { fetchContactById, updateContact } from "../../services/contacts";
 
 const UpdateContacts = () => {
   const { id } = useParams();
@@ -14,10 +14,10 @@ const UpdateContacts = () => {
   useEffect(() => {
     const fetchContacts = async () => {
       try {
-        const data = await fetchContactsById(id);
+        const data = await fetchContactById(id);
         setFormData({
-          type: data.type || "",
-          description: data.description || "",
+          name: data.name || "",
+          number: data.number || "",
         });
       } catch (err) {
         console.error("Error fetching Contacts:", err);
@@ -48,7 +48,7 @@ const UpdateContacts = () => {
       const payload = {
         ...formData,
       };
-      await updateContacts(id, payload);
+      await updateContact(id, payload);
       toast.success("Contacts updated successfully!");
     } catch (err) {
       console.error(err);
@@ -86,14 +86,14 @@ const UpdateContacts = () => {
         <div className="grid gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              type
+              name
             </label>
             <input
               type="text"
-              name="type"
-              placeholder="Enter type"
+              name="name"
+              placeholder="Enter name"
               className="border border-gray-300 p-3 rounded-xl w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-              value={formData.type}
+              value={formData.name}
               onChange={handleChange}
             />
           </div>
@@ -104,10 +104,10 @@ const UpdateContacts = () => {
             </label>
             <input
               type="text"
-              name="description"
-              placeholder="Enter description"
+              name="number"
+              placeholder="Enter number"
               className="border border-gray-300 p-3 rounded-xl w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-              value={formData.description}
+              value={formData.number}
               onChange={handleChange}
             />
           </div>

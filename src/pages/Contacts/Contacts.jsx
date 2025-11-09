@@ -2,7 +2,7 @@ import  { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import LoggedinLayout from "../../components/LoggedinLayout";
 import { Link, useNavigate } from "react-router-dom";
-import { deleteContacts, fetchContacts } from "../../services/contact";
+import { deleteContacts, fetchContacts } from "../../services/contacts";
 
 const PER_PAGE = 10;
 
@@ -15,7 +15,7 @@ const Contacts = () => {
   const [total, setTotal] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [selectedPlayerId, setSelectedPlayerId] = useState(null);
+  const [selectedContactId, setSelectedContactId] = useState(null);
   const [deleting, setDeleting] = useState(false);
 
   const getContacts = async () => {
@@ -44,17 +44,17 @@ const Contacts = () => {
     setCurrentPage(selected);
   };
 
-  const handleDeleteClick = (playerId) => {
-    setSelectedPlayerId(playerId);
+  const handleDeleteClick = (contactId) => {
+    setSelectedContactId(contactId);
     setShowConfirmModal(true);
   };
 
   const confirmDelete = async () => {
     setDeleting(true);
     try {
-      await deleteContacts(selectedPlayerId);
+      await deleteContacts(selectedContactId);
       setShowConfirmModal(false);
-      setSelectedPlayerId(null);
+      setSelectedContactId(null);
       getContacts(); // Refresh list
     } catch (err) {
       console.error("Delete failed:", err);
@@ -87,31 +87,31 @@ const Contacts = () => {
                 <thead className="bg-gray-100">
                   <tr>
                     <th className="px-6 py-3 text-xs text-center font-bold text-gray-700 uppercase">
-                      Type
+                      Name
                     </th>
                     <th className="px-6 py-3 text-xs text-center font-bold text-gray-700 uppercase">
-                      Description
+                      Number
                     </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {contacts.map((player) => (
+                  {contacts.map((contact) => (
                     <tr
-                      key={player._id}
+                      key={contact._id}
                       className="hover:bg-gray-50 transition"
-                      onClick={() => navigate(`/update-contact/${player._id}`)}
+                      onClick={() => navigate(`/update-contact/${contact._id}`)}
                     >
                       <td className="px-6 py-4 text-sm text-gray-900">
-                        {player.type || "--"}
+                        {contact.name || "--"}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-700">
-                        {player.description || "--"}
+                        {contact.number || "--"}
                       </td>
                       <td className="px-6 py-4 text-sm text-center z-10">
                         <button
                           onClick={(event) => {
                             event.stopPropagation();
-                            handleDeleteClick(player._id);
+                            handleDeleteClick(contact._id);
                           }}
                           className="text-red-600 hover:text-red-800 font-medium"
                         >

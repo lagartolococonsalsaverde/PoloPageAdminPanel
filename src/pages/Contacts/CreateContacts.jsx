@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import LoggedinLayout from "../../components/LoggedinLayout";
-import { createPlayer } from "../../services/dashboard.api";
-import { createContact } from "../../services/contact";
+import { createContact } from "../../services/contacts";
 
 const initialFormState = {
   type: "",
@@ -29,8 +28,8 @@ const CreateContact = () => {
     setMessage("");
     try {
       const payload = {
-        type: formData.type,
-        description: formData.description || null,
+        name: formData.name,
+        number: formData.number || null,
       };
       await createContact(payload);
       setMessage("Contact added successfully!");
@@ -53,28 +52,28 @@ const CreateContact = () => {
         <div className="grid gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Type
+              Name
             </label>
             <input
               type="text"
-              name="type"
-              placeholder="Enter the type"
+              name="name"
+              placeholder="Enter the name"
               className="border border-gray-300 p-3 rounded-xl w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-              value={formData.type}
+              value={formData.name}
               onChange={handleChange}
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Description (optional)
+              number
             </label>
             <input
               type="text"
-              name="description"
-              placeholder="optional"
+              name="number"
+              placeholder="+12-------"
               className="border border-gray-300 p-3 rounded-xl w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-              value={formData.description}
+              value={formData.number}
               onChange={handleChange}
             />
           </div>

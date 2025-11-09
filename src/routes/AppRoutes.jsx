@@ -18,6 +18,9 @@ import Handicaps from "../pages/Handicap/Handicaps";
 import CreateHandicap from "../pages/Handicap/CreateHandicap";
 import UpdateHandicap from "../pages/Handicap/UpdateHandicaps";
 import Whatsapp from "../pages/Whatsapp/Whatsapp";
+import CreateContact from "../pages/Contacts/CreateContacts";
+import UpdateContacts from "../pages/Contacts/UpdateContacts";
+import Contacts from "../pages/Contacts/Contacts";
 
 const isUserAuthenticated = () => {
   return !!Cookies.get("token");
@@ -212,6 +215,34 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <UpdateHandicap />
+            </ProtectedRoute>
+          }
+        />
+
+
+        <Route
+          path="/contacts"
+          element={
+            <ProtectedRoute>
+              <Contacts />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/create-contact"
+          element={
+            <ProtectedRoute>
+              <CreateContact />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/update-contact/:id"
+          element={
+            <ProtectedRoute>
+              <UpdateContacts />
             </ProtectedRoute>
           }
         />

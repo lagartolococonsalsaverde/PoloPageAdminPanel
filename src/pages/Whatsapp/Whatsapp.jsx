@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import Select from "react-select";
 import LoggedinLayout from "../../components/LoggedinLayout";
-import { fetchReplies, sendMessage } from "../../services/whatsapp.api";
+import { deleteReply, fetchReplies, sendMessage } from "../../services/whatsapp.api";
 import { fetchContacts } from "../../services/contacts";
+import { toast } from "react-toastify";
 
 const PER_PAGE = 10;
 
@@ -18,6 +19,11 @@ const WhatsApp = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [sending, setSending] = useState(false);
   const [message, setMessage] = useState("");
+
+  // Delete modal
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedReply, setSelectedReply] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   // Fetch WhatsApp replies (pagination)
   const getReplies = async () => {
@@ -61,7 +67,7 @@ const WhatsApp = () => {
   const handleSend = async (e) => {
     e.preventDefault();
     if (!selectedContacts.length) {
-      alert("Please select at least one contact.");
+      toast.error("Please select at least one contact.");
       return;
     }
 
@@ -69,24 +75,41 @@ const WhatsApp = () => {
     try {
       const payload = {
         numbers: selectedContacts.map((c) => c.value),
-        flowName: flow?.value || "flow_test",  // dynamic flow selection
+        flowName: flow?.value || "flow_test",
       };
 
       await sendMessage(payload);
-      alert("Message sent successfully!");
-      setModalOpen(false);
+      toast.success("Message sent successfully!");
       setMessage("");
       setSelectedContacts([]);
-      getReplies();
     } catch (err) {
       console.error("❌ Send Error:", err);
-      alert("Failed to send message");
+      toast.error("Failed to send message");
     } finally {
       setSending(false);
     }
   };
 
   const handlePageClick = ({ selected }) => setPage(selected);
+
+  // Confirm delete
+  const handleDeleteConfirm = async () => {
+    if (!selectedReply) return;
+    setDeleting(true);
+    try {
+      // call your delete API here
+      await deleteReply(selectedReply.messageId);
+
+      toast.success("Reply deleted successfully!");
+      setDeleteModalOpen(false);
+      getReplies();
+    } catch (err) {
+      console.error("Delete Error:", err);
+      toast.error("Failed to delete reply.");
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   const parseMessage = (reply) => {
     if (reply.type === "text") return reply.raw?.text?.body || reply.content;
@@ -95,17 +118,23 @@ const WhatsApp = () => {
       if (nfm) {
         try {
           const parsed = JSON.parse(nfm.response_json || "{}");
+          delete parsed.flow_token;
           return (
-            <>
-              <p className="font-semibold text-blue-800">{nfm.body || "Flow Reply"}</p>
-              <div className="text-gray-700 text-sm mt-1 space-y-0.5">
-                {Object.entries(parsed).map(([key, val]) => (
-                  <p key={key}>
-                    <span className="font-medium">{key}</span>: {val}
-                  </p>
+            <div className="bg-white border-purple-200 rounded-xl mb-4 transition-all hover:shadow-md">
+              <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 text-sm text-gray-800 space-y-2">
+                {Object.entries(parsed).map(([key, val], index) => (
+                  <div
+                    key={key}
+                    className={`flex justify-between items-center border-b border-purple-100 ${index < Object.entries(parsed).length - 1 ? "pb-2" : ""}`}
+                  >
+                    <span className="font-medium capitalize text-gray-600">
+                      {key.replaceAll("_", " ")}
+                    </span>
+                    <span className="font-semibold text-purple-700">{val || "-"}</span>
+                  </div>
                 ))}
               </div>
-            </>
+            </div>
           );
         } catch {
           return nfm.body || reply.content;
@@ -143,17 +172,26 @@ const WhatsApp = () => {
               {replies.map((reply) => (
                 <div
                   key={reply._id}
-                  className="bg-white text-gray-900 rounded-xl shadow-md p-5 border border-gray-100 hover:shadow-lg transition duration-200"
+                  className="bg-white text-gray-900 rounded-xl shadow-md px-5 py-3 border border-gray-100 hover:shadow-lg transition duration-200"
                 >
                   <div className="flex justify-between items-center mb-2">
                     <p className="font-semibold text-blue-700">
-                      From: {reply.from || "--"}
+                      From: {reply?.contactName || reply.from || "--"}
                     </p>
                     <p className="text-sm text-gray-500">
                       {formatDate(reply.timestamp)}
                     </p>
+                    <button
+                      onClick={() => {
+                        setSelectedReply(reply);
+                        setDeleteModalOpen(true);
+                      }}
+                      className="bg-red-100 rounded-lg hover:bg-red-200 text-red-700 font-medium text-sm px-5 py-2 transition-colors"
+                    >
+                      Delete
+                    </button>
                   </div>
-                  <div className="border-t border-gray-200 pt-3 text-gray-800">
+                  <div className="border-t border-gray-200 pt-3 text-gray-800 text-left">
                     {parseMessage(reply)}
                   </div>
                 </div>
@@ -182,14 +220,12 @@ const WhatsApp = () => {
       </div>
 
       {/* Send Message Modal */}
-      {/* Send Message Modal */}
       {modalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
           <div className="bg-white text-gray-900 rounded-xl shadow-lg w-full max-w-md p-6 relative">
             <h3 className="text-xl font-semibold mb-4">Send WhatsApp Message</h3>
 
             <form onSubmit={handleSend}>
-              {/* Contacts */}
               <label className="block text-sm font-medium mb-1">Select Contacts</label>
               <Select
                 isMulti
@@ -200,7 +236,6 @@ const WhatsApp = () => {
                 className="mb-3"
               />
 
-              {/* Flow Dropdown */}
               <label className="block text-sm font-medium mb-1">Select Flow</label>
               <Select
                 options={[
@@ -235,6 +270,32 @@ const WhatsApp = () => {
         </div>
       )}
 
+      {/* Delete Confirmation Modal */}
+      {deleteModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+          <div className="bg-white rounded-xl shadow-lg p-6 max-w-sm w-full text-gray-900">
+            <h3 className="text-lg font-semibold mb-2">Confirm Delete</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Are you sure you want to delete this reply? This action cannot be undone.
+            </p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => setDeleteModalOpen(false)}
+                className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteConfirm}
+                disabled={deleting}
+                className="px-5 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+              >
+                {deleting ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </LoggedinLayout>
   );
 };

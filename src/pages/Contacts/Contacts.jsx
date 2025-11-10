@@ -68,7 +68,7 @@ const Contacts = () => {
   return (
     <LoggedinLayout>
       <div className="container mx-auto p-4">
-        <h2 className="text-2xl font-semibold text-white mb-6">contacts</h2>
+        <h2 className="text-2xl font-semibold text-white mb-6">Contacts</h2>
 
         <Link
           to={"/create-contact"}
@@ -91,6 +91,9 @@ const Contacts = () => {
                     </th>
                     <th className="px-6 py-3 text-xs text-center font-bold text-gray-700 uppercase">
                       Number
+                    </th>
+                    <th className="px-6 py-3 text-xs text-center font-bold text-gray-700 uppercase">
+                      Actions
                     </th>
                   </tr>
                 </thead>

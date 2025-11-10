@@ -1,16 +1,20 @@
-import  { useState } from "react";
+import { useState } from "react";
 import LoggedinLayout from "../../components/LoggedinLayout";
 import { createContact } from "../../services/contacts";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const initialFormState = {
-  type: "",
-  description: "",
+  name: "",
+  number: "",
 };
 
 const CreateContact = () => {
   const [formData, setFormData] = useState(initialFormState);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,13 +31,35 @@ const CreateContact = () => {
     setLoading(true);
     setMessage("");
     try {
+      debugger
+      if (!formData.name) {
+        toast.error("Please enter a name.")
+      }
+
+      if (!formData.number) {
+        toast.error("Please enter a phone number.")
+      }
+
+      if (formData?.name?.length > 100) {
+        toast.error("Name length should be less than 100.")
+      }
+
+      if (formData?.number?.length > 15) {
+        toast.error("Number length should be less than 16.")
+      }
+
+      if ((formData.number.trim()).includes(" ")) {
+        toast.error("Spaces not allowed in phone number");
+      }
+
       const payload = {
         name: formData.name,
-        number: formData.number || null,
+        number: (formData.number.trim()) || null,
       };
       await createContact(payload);
       setMessage("Contact added successfully!");
       setFormData(initialFormState);
+      navigate("/contacts")
     } catch (err) {
       console.error(err);
       setMessage("Failed to add contact.");
@@ -66,7 +92,7 @@ const CreateContact = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              number
+              Phone Number
             </label>
             <input
               type="text"
@@ -87,7 +113,7 @@ const CreateContact = () => {
           </button>
 
           {message && (
-            <p className="text-center text-green-600 text-sm mt-2">{message}</p>
+            <p className="text-center text-green-600 font-medium text-[15px] mt-2 py-6 px-5 bg-green-100 rounded-xl">{message}</p>
           )}
         </div>
       </div>

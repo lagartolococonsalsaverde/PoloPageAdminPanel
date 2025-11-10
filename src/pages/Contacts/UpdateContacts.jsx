@@ -1,5 +1,5 @@
-import  { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import LoggedinLayout from "../../components/LoggedinLayout";
 import { toast } from "react-toastify";
 import { fetchContactById, updateContact } from "../../services/contacts";
@@ -10,6 +10,8 @@ const UpdateContacts = () => {
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
   const [message, setMessage] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchContacts = async () => {
@@ -45,11 +47,32 @@ const UpdateContacts = () => {
     setUpdating(true);
     setMessage("");
     try {
+      if (!formData.name) {
+        toast.error("Please enter a name.")
+      }
+
+      if (!formData.number) {
+        toast.error("Please enter a phone number.")
+      }
+
+      if (formData?.name?.length > 100) {
+        toast.error("Name length should be less than 100.")
+      }
+
+      if (formData?.number?.length > 15) {
+        toast.error("Number length should be less than 16.")
+      }
+
+      if ((formData.number.trim()).includes(" ")) {
+        toast.error("Spaces not allowed in phone number");
+      }
+
       const payload = {
         ...formData,
       };
       await updateContact(id, payload);
       toast.success("Contacts updated successfully!");
+      navigate("/contacts")
     } catch (err) {
       console.error(err);
       setMessage("Failed to update contacts.");

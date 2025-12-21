@@ -21,6 +21,9 @@ import Whatsapp from "../pages/Whatsapp/Whatsapp";
 import CreateContact from "../pages/Contacts/CreateContacts";
 import UpdateContacts from "../pages/Contacts/UpdateContacts";
 import Contacts from "../pages/Contacts/Contacts";
+import Services from "../pages/Services/Services";
+import UpdateService from "../pages/Services/UpdateService";
+import CreateService from "../pages/Services/CreateService";
 
 const isUserAuthenticated = () => {
   return !!Cookies.get("token");
@@ -246,6 +249,35 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/services"
+          element={
+            <ProtectedRoute>
+              <Services />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/create-service"
+          element={
+            <ProtectedRoute>
+              <CreateService />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/update-service/:id"
+          element={
+            <ProtectedRoute>
+              <UpdateService />
+            </ProtectedRoute>
+          }
+        />
+
+
 
         {/* Catch-all route */}
         <Route path="*" element={<Navigate to="/login" replace />} />

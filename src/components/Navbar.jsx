@@ -65,6 +65,13 @@ const Navbar = () => {
           </Link>
 
           <Link
+            to="/services"
+            className="block md:inline-block text-white hover:text-yellow-300 px-6 py-3 md:py-2 transition duration-300"
+          >
+            Services
+          </Link>
+
+          <Link
             to="/whatsapp"
             className="block md:inline-block text-white hover:text-yellow-300 px-6 py-3 md:py-2 transition duration-300"
           >

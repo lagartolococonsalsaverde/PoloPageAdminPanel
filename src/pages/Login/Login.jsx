@@ -3,7 +3,7 @@ import { Eye, EyeOff } from "lucide-react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../environments/development.environment";
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -25,14 +25,27 @@ const Login = () => {
                 { headers: { "Content-Type": "application/json" } }
             );
 
-            if (response.status === 200) {
-                Cookies.set("token", response.data.data.token);
-                Cookies.set("refreshToken", response.data.data.refreshToken);
+            if (response.status === 200 || response.status === 201) {
+                const { token, refreshToken, data } = response.data.data;
+                const { role, username } = data;
+                debugger;
+                if (role !== "admin") {
+
+                    setError("Only admins are allowed to login.");
+                    setLoading(false);
+                    return;
+                }
+
+                localStorage.setItem("token", token);
+                localStorage.setItem("refreshToken", refreshToken);
+                localStorage.setItem("user", JSON.stringify(username));
 
                 navigate("/dashboard");
             }
         } catch (err) {
-            setError("Invalid email or password. Please try again.");
+            console.error("Login error:", err);
+            const errorMessage = err.response?.data?.message || err.response?.data?.error || "Invalid email or password. Please try again.";
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }

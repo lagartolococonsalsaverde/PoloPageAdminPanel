@@ -5,9 +5,10 @@ import Cookies from 'js-cookie';
 export const clearSession = () => {
     const pathname = window.location.pathname;
     // Cookies.remove();
-    Cookies.remove('token');
-    Cookies.remove('userId');
-    Cookies.remove('refreshToken');
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user'); // Removing user profile info as well
     window.location.href = '/login';
 
     if (pathname.startsWith('/dashboard')) {
@@ -31,7 +32,7 @@ export const createHttpService = (baseURL = 'https://localhost:5000/') => {
     // Axios request interceptor
     instance.interceptors.request.use(
         (config) => {
-            const accessToken = Cookies.get('token');
+            const accessToken = localStorage.getItem('token');
             if (accessToken) {
                 config.headers['Authorization'] = `Bearer ${accessToken}`;
                 config.headers['Content-Type'] =
@@ -52,7 +53,7 @@ export const createHttpService = (baseURL = 'https://localhost:5000/') => {
 
     const refreshUserToken = async () => {
         try {
-            const response = await instance.post('/refreshToken', { refreshToken: Cookies.get('refreshToken') });
+            const response = await instance.post('/refreshToken', { refreshToken: localStorage.getItem('refreshToken') });
             return response.data.responseData;
         } catch (error) {
             toast.info("Session timed out. Please sign in again.")

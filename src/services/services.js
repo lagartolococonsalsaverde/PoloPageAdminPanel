@@ -2,7 +2,7 @@ import { axiosInstance } from "./dashboard.api";
 
 export async function deleteService(questionId) {
   const response = await axiosInstance.deleteMethod(
-    `api/questions/${questionId.toString()}`
+    `questions/${questionId.toString()}`
   );
   return response.data;
 }

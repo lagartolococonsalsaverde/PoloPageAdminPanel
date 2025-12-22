@@ -4,7 +4,7 @@ import { axiosInstance } from "./dashboard.api";
 
 export async function deleteQuestion(questionId) {
   const response = await axiosInstance.deleteMethod(
-    `api/questions/${questionId.toString()}`
+    `questions/${questionId.toString()}`
   );
   return response.data;
 }
@@ -36,7 +36,7 @@ export async function fetchHandicapById(handicapId) {
 export async function updateHandicap(handicapId, data) {
   const response = await axiosInstance.put(`handicaps/${handicapId}`, data);
   return response.data;
-} 
+}
 
 export async function createHandicap(data) {
   const response = await axiosInstance.post(`handicaps`, data);

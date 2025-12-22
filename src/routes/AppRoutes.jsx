@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 import Login from "../pages/Login/Login";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import TemplateSettings from "../pages/Template/TemplateSettings";
@@ -24,9 +24,10 @@ import Contacts from "../pages/Contacts/Contacts";
 import Services from "../pages/Services/Services";
 import UpdateService from "../pages/Services/UpdateService";
 import CreateService from "../pages/Services/CreateService";
+import Profile from "../pages/Profile/Profile";
 
 const isUserAuthenticated = () => {
-  return !!Cookies.get("token");
+  return !!localStorage.getItem("token");
 };
 
 // Protect Routes for Logged-in Users
@@ -278,6 +279,15 @@ const AppRoutes = () => {
         />
 
 
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Catch-all route */}
         <Route path="*" element={<Navigate to="/login" replace />} />

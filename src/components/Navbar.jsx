@@ -1,4 +1,4 @@
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 import { useState } from "react";
 import { Menu, X, ChevronDown, UserCircleIcon } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -10,8 +10,9 @@ const Navbar = () => {
   const [isUserOpen, setIsUserOpen] = useState(false);
 
   const handleLogout = () => {
-    Cookies.remove("token");
-    Cookies.remove("refreshToken");
+    localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("user");
     navigate("/login");
   };
 
@@ -130,6 +131,16 @@ const Navbar = () => {
             onMouseLeave={() => setIsUserOpen(false)}
           >
             <button className="flex items-center text-white hover:text-yellow-300 px-6 py-3 md:py-2 transition duration-300">
+              <span className="mr-2 hidden md:block">
+                {(() => {
+                  try {
+                    const user = JSON.parse(localStorage.getItem("user"));
+                    return user?.username || user?.name || user || "User";
+                  } catch (e) {
+                    return "User";
+                  }
+                })()}
+              </span>
               <UserCircleIcon color="white" />{" "}
               <ChevronDown size={18} className="ml-2" />
             </button>

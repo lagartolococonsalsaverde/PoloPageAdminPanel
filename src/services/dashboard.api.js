@@ -48,7 +48,7 @@ export async function fetchQnA(page, perPage) {
 
   const queryParams = new URLSearchParams(params)
 
-  const response = await axiosInstance.get(`api/questions?${queryParams.toString()}`);
+  const response = await axiosInstance.get(`questions?${queryParams.toString()}`);
   return response.data;
 }
 

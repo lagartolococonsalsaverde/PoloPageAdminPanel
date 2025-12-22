@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
+import { toast } from "react-toastify";
 import LoggedinLayout from "../../components/LoggedinLayout";
 import { Link, useNavigate } from "react-router-dom";
+import { UserCircleIcon } from "lucide-react";
 import { fetchServices, deleteServices } from "../../services/services";
 import { CategoryTypes } from "./enum"; // adjust path if needed
 
@@ -55,8 +57,10 @@ const Services = () => {
       setShowConfirmModal(false);
       setSelectedServiceId(null);
       getServices();
+      toast.success("Service deleted successfully");
     } catch (err) {
       console.error("Delete failed", err);
+      toast.error(err.response?.data?.message || "Failed to delete service");
     } finally {
       setDeleting(false);
     }
@@ -106,6 +110,7 @@ const Services = () => {
                 <tr>
                   <th className="px-4 py-3 text-sm text-left">Name</th>
                   <th className="px-4 py-3 text-sm text-left">Category</th>
+                  <th className="px-4 py-3 text-sm text-left">Posted By</th>
                   <th className="px-4 py-3 text-sm text-left">Price</th>
                   <th className="px-4 py-3 text-sm text-left">Location</th>
                   <th className="px-4 py-3 text-sm text-center">Actions</th>
@@ -134,6 +139,12 @@ const Services = () => {
                       <span className="px-2 py-1 text-xs rounded-full bg-blue-50 text-blue-700">
                         {s.category || "—"}
                       </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center text-gray-700 text-sm">
+                        <UserCircleIcon size={16} className="mr-1" />
+                        <span>{s.user?.username || s.user?.name || "Unknown User"}</span>
+                      </div>
                     </td>
                     <td className="px-4 py-3">${s.price}</td>
                     <td className="px-4 py-3">{s.location}</td>

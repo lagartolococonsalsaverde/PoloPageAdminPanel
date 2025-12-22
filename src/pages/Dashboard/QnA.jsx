@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 import LoggedinLayout from "../../components/LoggedinLayout";
+import { UserCircleIcon } from "lucide-react";
 import ReactPaginate from "react-paginate";
 import { formatDistanceToNow } from "date-fns";
 import { fetchQnA } from "../../services/dashboard.api";
@@ -51,8 +53,10 @@ const QnA = () => {
         )
       );
       setDeleteTarget(null);
+      toast.success("Answer deleted successfully");
     } catch (err) {
       console.error("Error deleting answer:", err);
+      toast.error(err.response?.data?.message || "Failed to delete answer");
     }
   };
 
@@ -61,8 +65,10 @@ const QnA = () => {
       await deleteQuestion(questionId);
       setQuestionNAnswers(prev => prev.filter(q => q._id !== questionId));
       setDeleteQuestionTarget(null);
+      toast.success("Question deleted successfully");
     } catch (err) {
       console.error("Error deleting question:", err);
+      toast.error(err.response?.data?.message || "Failed to delete question");
     }
   };
 
@@ -88,6 +94,10 @@ const QnA = () => {
                       >
                         Delete Question
                       </button>
+                      <div className="flex items-center mt-2 text-gray-500 text-sm">
+                        <UserCircleIcon size={16} className="mr-1" />
+                        <span>{qa.user?.username || qa.user?.name || "Unknown User"}</span>
+                      </div>
                     </div>
                     <div className="flex flex-col items-end">
                       <div className="text-lg font-bold text-blue-600">{qa.votes} Votes</div>
@@ -104,7 +114,13 @@ const QnA = () => {
                         {qa.answers.map((ans, idx) => (
                           <li key={idx} className="bg-gray-100 p-4 rounded-lg">
                             <div className="flex justify-between">
-                              <div className="text-gray-800">{ans.text}</div>
+                              <div className="flex flex-col">
+                                <span className="text-gray-800">{ans.text}</span>
+                                <div className="flex items-center mt-1 text-gray-500 text-xs">
+                                  <UserCircleIcon size={14} className="mr-1" />
+                                  <span>{ans.user?.username || ans.user?.name || "Unknown User"}</span>
+                                </div>
+                              </div>
                               <div className="flex flex-col items-end">
                                 <button
                                   onClick={() =>
@@ -171,8 +187,7 @@ const QnA = () => {
                   Cancel
                 </button>
                 <button
-                  onClick={() =>
-                  {
+                  onClick={() => {
                     debugger
                     handleDeleteAnswer(deleteTarget.questionId, deleteTarget.answerCreated)
                   }

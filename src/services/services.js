@@ -42,3 +42,23 @@ export async function createService(data) {
   const response = await axiosInstance.post(`listings`, data);
   return response.data;
 }
+
+export async function fetchComments(listingId) {
+  const response = await axiosInstance.get(`listings/${listingId}/comments`);
+  return response.data;
+}
+
+export async function addComment(listingId, data) {
+  const response = await axiosInstance.post(
+    `listings/${listingId}/comments`,
+    data
+  );
+  return response.data;
+}
+
+export async function deleteComment(listingId, commentId) {
+  const response = await axiosInstance.deleteMethod(
+    `listings/${listingId}/comments/${commentId}`
+  );
+  return response.data;
+}

@@ -10,26 +10,27 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: '18' # or your version
+          node-version: '18'
 
       - name: Install dependencies
         run: npm install
 
       - name: Build project
-        run: npm run build
-
-      - name: Create deploy directory if it doesn't exist
         run: |
-           mkdir -p /var/www/admin-panel
-           chown -R $USER:$USER /var/www/admin-panel
+          export CI=true
+          export HUSKY=0
+          export NODE_OPTIONS="--max-old-space-size=2048"
+          npm run build
 
-      - name: Copy build files to deploy directory
+      - name: Kill leftover node processes
+        run: pkill -f node || true
+
+      - name: Deploy build
         run: |
-           rm -rf /var/www/admin-panel/*
-           cp -r dist/* /var/www/admin-panel/
+          mkdir -p /var/www/admin-panel
+          rm -rf /var/www/admin-panel/*
+          cp -r dist/* /var/www/admin-panel/

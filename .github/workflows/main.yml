@@ -26,10 +26,10 @@ jobs:
 
       - name: Create deploy directory if it doesn't exist
         run: |
-          sudo mkdir -p /var/www/admin-panel
-          sudo chown -R $USER:$USER /var/www/admin-panel
+           mkdir -p /var/www/admin-panel
+           chown -R $USER:$USER /var/www/admin-panel
 
       - name: Copy build files to deploy directory
         run: |
-          sudo rm -rf /var/www/admin-panel/*
-          sudo cp -r dist/* /var/www/admin-panel/
+           rm -rf /var/www/admin-panel/*
+           cp -r dist/* /var/www/admin-panel/

@@ -24,7 +24,7 @@ jobs:
           export CI=true
           export HUSKY=0
           export NODE_OPTIONS="--max-old-space-size=2048"
-          npm run build
+          npm run build </dev/null
 
       - name: Kill leftover node processes
         run: pkill -f node || true
